@@ -1,0 +1,30 @@
+{
+  "name": "MakeMeApi",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "forever": "0.10.0",
+    "nodemon": "0.7.6",
+    "mocha": "1.12.0",
+    "should": "1.2.2",
+    "validator": "0.5.0",
+    "express-validator": "0.3.2",
+    "express": "3.1.1",
+    "mongoose": "3.6.15",
+    "mysql": "2.0.0-alpha7",
+    "memcached": "0.2.5",
+    "crypto": "0.0.3",
+    "enc": "0.2.0",
+    "introspect": "0.0.2",
+    "yuidocjs": "0.3.41",
+    "makedir": "0.0.9",
+    "node-watch": "0.3.3",
+    "underscore": "1.4.4",
+    "moment": "2.0.0",
+    "fs-finder": "1.7.4"
+  }
+}

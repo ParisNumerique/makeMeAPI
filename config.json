@@ -1,0 +1,94 @@
+{
+  "environment": "local",
+  "debug": true,
+  "developpment": {
+    "app": {
+      "docPath": "",
+      "ssl_key": "",
+      "ssl_crt": "",
+      "create_user_allowed_ip": [
+        {
+          "ip": ""
+        },
+        {
+          "ip": ""
+        }
+      ],
+      "memcached_host": "",
+      "memcached_port": "",
+      "memcached_lifetime": ""
+    },
+    "datasources": {
+      "mysql": {
+        "connectionName": {
+          "user": "",
+          "password": "",
+          "database": "",
+          "debug": false,
+          "host": "",
+          "port": 3306
+        }
+      },
+      "mongo": {
+        "connectionName": {
+          "user": "",
+          "password": "",
+          "database": "",
+          "host": "",
+          "port": 27017
+        }
+      },
+      "file": {
+        "fileName": {
+          "path": "",
+          "encoding": "utf8"
+        }
+      }
+    }
+  },
+  "production": {
+    "app": {
+      "docPath": "",
+      "ssl_key": "",
+      "ssl_crt": "",
+      "create_user_allowed_ip": [
+        {
+          "ip": ""
+        },
+        {
+          "ip": ""
+        }
+      ],
+      "memcached_host": "",
+      "memcached_port": "",
+      "memcached_lifetime": ""
+    },
+    "datasources": {
+      "mysql": {
+        "connectionName": {
+          "user": "",
+          "password": "",
+          "database": "",
+          "debug": false,
+          "host": "",
+          "port": 3306
+        }
+      },
+      "mongo": {
+        "connectionName": {
+          "user": "",
+          "password": "",
+          "database": "",
+          "host": "",
+          "port": 27017
+        }
+      },
+      "file": {
+        "fileName": {
+          "path": "",
+          "encoding": "utf8"
+        }
+      }
+    }
+  }
+}
