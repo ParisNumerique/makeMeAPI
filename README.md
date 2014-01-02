@@ -17,11 +17,12 @@ First install [node.js](http://nodejs.org) and [mongodb](http://docs.mongodb.org
 ---
 Open config.json on the root of the projet and edit it as you need.
 
-* `environment`: The environment of the application, can be "developpemnt", " "production" or whatever you want.
-* `debug`: true or false. If true, turning the application in "verbose" mode wich will display in terminal several log informations.
-* `[environment]`: json key corresponding to an environment name declare above
+* `environment`: The environment of the application. Can be "development", "production" or whatever you want.
+* `debug`: true or false. If true, turning the application in "verbose" mode wich will display in terminal several logs informations.
+* `[environment]`: json key corresponding to an environment name declared above.
 	* `docPath` : path where the documentation file will be generated. Be sure that this folder is writable. Default is "./docs"
 	* `ssl_key` / `ssl_crt` : path to you SSL key and certificate files if you want enable HTTPS. Leave this path empty if you just want HTTP.
+	* `cors` : set domain name for Cross-Origin Requests access.
 	* `create_user_allowed_ip` : set the IPs that are authorised to call /register route for create user account.
 	* `memcached_*` : memcached configuration. Leave memcached_host empty if you don't want use memcached.
 	* `datasources` : all your datasources connection, can be "mysql", "mongo" or "file"
@@ -51,22 +52,44 @@ Open config.json on the root of the projet and edit it as you need.
 ---
 To start the server, simply execute this command in your terminal
 
-	$ node server.js
+	$ nodemon server.js
 	
-Note : you can also start the server by using [nodemon](https://github.com/remy/nodemon)  or [forever](https://github.com/nodejitsu/forever). This two packets are installed by default if you use the `$ npm install` command as describe before.
+Note : you can also start the server with [forever](https://github.com/nodejitsu/forever). This packet is installed by default if you use the `$ npm install` command as describe before.
 
 
-## Usage ##
+
+### Resquesting the API
 ---
 
-With MakeMeApi you just have one thing to do and to focus on : your models. 
+First you have to create an account (be sure to declare first your IP in config.js under the "create_user_allowed_ip" key): 
 
-* Go to models/ repository and create a subfolder corresponding to the version of your API. ie . "models/1.0/"
-* Under this folder create a .js file and name it as you want. 
-* Create a class and create all your methods you need. 
-	* These methods have to do only one things : get / save data from a connection database declared in config.json.
-	* All methods needs at least the "callback" parameters (see the example). 
-* Each time you upload a models file under the models folder, yuidoc will parse it and extract you comment and put it in a json file under the docPath you define in the config.json. More information about interpreted comments are avaibable [here](http://yui.github.io/yuidoc/).
+	$ curl -d "email=myemail@makemeapi.com&password=mystrongpassword&name=doe&firstname=john" http://localhost:3000/register
+
+Response will return a json object with a token. 
+
+Note that the user is now created and stored in the mongodb MakeMeApi database under "users" collection.
+
+
+## Sample ##
+---
+* Install the MySQL datas (./sample/cafe_un_euro.sql)
+* Update the config.js file. Under the "development / datasources / mysql" key, set your MySQL database settings.
+* Copy the whole folders inside sample/ and paste it  into models/ directory.
+* Start the server (node server.js).
+* Call the endpoint : 
+	
+	* for v1.0 model (without parameters)::
+	
+		`$ curl -d "token=[token]" http://localhost:3000/data/1.0/coffee/all`
+
+	* for v1.1 model (with parameters):
+	
+		`$ curl -d "token=[token]&offset=0&limit=1" http://localhost:3000/data/1.0/coffee/all`
+
+* Good to know
+	* in each subfolder you can see a coffee.js file. This file contains your database queries. 
+	* each time you update or add a file under the models folder, yuidoc will parse it and extract your comment and put it in a json file under the docPath you define in the config.json. More information about block comments are avaibable [here](http://yui.github.io/yuidoc/).
+	* you can access to the documentation via `$ curl http://localhost:3000/doc` (cli formatted) or `$ curl http://localhost:3000/rawdoc` (json formatted)
 
 
 ### Class sample
@@ -74,46 +97,36 @@ With MakeMeApi you just have one thing to do and to focus on : your models.
 ```js
 	
 	/**
-	BookStore Sample class : expose BookingStore mysql database datas.
+	OneEuroCoffee class
 	
-	@class BookStore
+	@class Coffee
 	@version 1.0
 	@constructor
 	*/
-	function BookStore() {
-
+	function Coffee() {
+		
 		/**
-		* Get some data from book store
+		* List of coffee shop
 		*
-		* @method get_categories
-		* @return {object} le nom et l'identifiant de la catégorie.
+		* @method all
+		* @return {object} list of coffee shops
 		*/
-		this.get = function(callback) {
-			var q = 'SELECT idcategories,name FROM categories ORDER BY name';
-			db.PN.exec(q, callback);
+		this.all = function(callback) {
+			var q = 'SELECT * FROM cafe ORDER BY name';
+			db.coffee.exec(q, callback);
 		};
 	
 	}
+
+	module.exports = Coffee;
+	
 ```
-### Let's rock now : resquest the API
----
-
-First you have to create an account : 
-
-	$ curl -d "email=email&example.com&pwd=mystrongpassword" http://your_domain:3000/register
-
-Response to the request will return a json object with a token. 
-
-Note that the user is now created and stored in the mongodb MakeMeApi database under "users" collection.
-
-Now, just let the enchantment operate, open a browser and call [you_domain]:3001/data/[className]/[methodName]/?token=[yourtoken]&param1=&params2=....or open a terminal and execute `$ curl -d "token=[token]&lat=48.856332&lon=2.353453&radius=500&offset=0&limit=10" http://makemeapi.lestudio.lc:3000/data/1.0/QueFaire/get_geo_activities/`
-
-You can also see the generated doc by calling http://your_domain:3000/doc
 
 
 ## Running unit tests
 ---
 TODO
+
 
 
 ## Extra
