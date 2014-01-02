@@ -13,7 +13,8 @@ var express = require('express'),
 	introspect = require('introspect'),
     moment = require('moment'),
     logger = require('./lib/logger'),
-    doc = require('./lib/doc');
+    doc = require('./lib/doc'),
+    async = require('async');
 
 var app = express();
     app.set('port', process.env.PORT || 3000);
@@ -25,14 +26,14 @@ var events = require('events'),
     dataReceived = new events.EventEmitter();
 
 var Class, Method, ClassName;
-var defaultVersion = '2.0';
+var defaultVersion = '1.0';
 
 /*
  * Header management (for COS)
 */
 app.configure(function(){
     app.use(function(req, res, next) {
-        res.setHeader("Access-Control-Allow-Origin", "http://makemeapi.lestudio.lc");
+        res.setHeader("Access-Control-Allow-Origin", _config[_environment].app.cors);
         res.setHeader("Access-Control-Allow-Credentials", true);
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST","PUT", "OPTIONS");
@@ -166,7 +167,6 @@ app.all('/register',function(req,res) {
         
         var email = sanitize(req.body.email).xss();
         var password = sanitize(req.body.password).xss();
-        var password_confirm = sanitize(req.body.password_confirm).xss();
         
         var firstname = sanitize(req.body.firstname).xss();
         var name = sanitize(req.body.name).xss();
@@ -175,7 +175,6 @@ app.all('/register',function(req,res) {
         var validator = new Validator();
             validator.check(email,'{"field":"email","str_error":"ERR_EMAIL"}').isEmail();
             validator.check(password,'{"field":"password","str_error":"ERR_PASSWORD_LEN"}').len(8);
-            validator.check(password_confirm,'{"field":"password_confirm","str_error":"ERR_PASSWORD_CONFIRM"}').equals(password);
             validator.check(name,'{"field":"name","str_error":"ERR_NAME"}').notNull();
             validator.check(firstname,'{"field":"firstname","str_error":"ERR_FIRSTNAME"}').notNull();
 
@@ -213,17 +212,56 @@ app.all('/register',function(req,res) {
 /*
  * Display DOC in JSON format.
 */
-app.all('/doc',function(req,res) {
+app.all('/rawdoc',function(req,res) {
     doc.get(function(doc) {
         res.send({'status':'success',data:doc,message:null});
     });
 });
 
 /*
+ * Display DOC in JSON format.
+*/
+app.all('/doc',function(req,res) {
+    doc.get(function(doc) {
+
+        var Table = require('cli-table');
+        
+        var table = new Table({
+            head: ['class', 'method','description','params','version'],
+            colWidths: [15, 15, 80, 40, 10],
+            style:{head:['green']}
+        });
+
+        async.each(doc.apiDoc,function(className) {
+            var args = [];
+            var query = [];
+            if(className.method.params.length > 0) {
+                async.each(className.method.params,function(params) {
+                    args.push(params.name+' ('+params.type+') : '+params.description);
+                    query.push(params.name+'='+params.type.toLowerCase());
+                    
+                });
+                var endpoint = 'Endpoint:\n'+className.class+'/'+className.method.name+'/?token=token&'+query.join("&");
+            } else {
+                args.push('-');
+                var endpoint = 'Endpoint:\n'+className.class+'/'+className.method.name+'/?token=token';
+            }
+            
+            table.push([className.class,className.method.name,className.method.description+"\n\n"+endpoint,args.join("\n"),className.method.version]);
+            
+        });
+
+        res.send(table.toString()+"\n");
+    });
+});
+
+
+
+/*
  * Welcome Home Route.
 */
 app.all('/', function(req, res) {
-    res.send({'status':'succes','data':null,'message':'Welcome to the Mairie de Paris node api-engine'});
+    res.send({'status':'succes','data':null,'message':'Welcome to MakeMeApi'});
 });
 
 
