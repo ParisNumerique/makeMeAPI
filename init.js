@@ -14,7 +14,6 @@ if(!fs.existsSync(appConf)) {
 
 _config = JSON.parse(fs.readFileSync(appConf));
 _environment = _config.environment;
-_secret_key = _config[_environment].app.secret_key;
 
 // Setup datasources describe in config file.
 exports.db = datasources.connect(_config[_environment].datasources);
