@@ -1,11 +1,12 @@
 {
-  "environment": "local",
+  "environment": "development",
   "debug": true,
-  "developpment": {
+  "development": {
     "app": {
-      "docPath": "",
+      "docPath": "./docs/",
       "ssl_key": "",
       "ssl_crt": "",
+      "cors": "",
       "create_user_allowed_ip": [
         {
           "ip": ""
@@ -30,18 +31,12 @@
         }
       },
       "mongo": {
-        "connectionName": {
+        "makeMeApi": {
           "user": "",
           "password": "",
-          "database": "",
-          "host": "",
+          "database": "makeMeApi",
+          "host": "localhost",
           "port": 27017
-        }
-      },
-      "file": {
-        "fileName": {
-          "path": "",
-          "encoding": "utf8"
         }
       }
     }
@@ -51,6 +46,7 @@
       "docPath": "",
       "ssl_key": "",
       "ssl_crt": "",
+      "cors": "",
       "create_user_allowed_ip": [
         {
           "ip": ""
