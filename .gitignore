@@ -1,3 +1,5 @@
 .DS_Store
+config.json
+sonar-project.properties
 node_modules/*
 test/
