@@ -21,7 +21,7 @@
     },
     "datasources": {
       "mysql": {
-        "connectionName": {
+        "connectionName_1": {
           "user": "",
           "password": "",
           "database": "",
