@@ -6,6 +6,12 @@
     "start": "node server.js",
     "test": "mocha"
   },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2"
+  },
   "dependencies": {
     "forever": "0.10.0",
     "nodemon": "0.7.6",
