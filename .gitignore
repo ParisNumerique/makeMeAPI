@@ -1,4 +1,5 @@
 .DS_Store
+.htaccess
 config.json
 sonar-project.properties
 node_modules/*
