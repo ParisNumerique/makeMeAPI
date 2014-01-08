@@ -163,5 +163,5 @@ MakeMeAPI is maintained and funded by [Mairie de Paris](http://www.paris.fr)
 
 License
 -------
-This project is under BSD-3 licence for more details read LICENCES.TXT
+This project is under BSD-3 licence for more details read LICENSE.txt
 
