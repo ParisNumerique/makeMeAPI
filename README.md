@@ -159,7 +159,6 @@ Got questions? Need help? Tweet at [@MakeMeAPI](http://twitter.com/MakeMeAPI).
 
 MakeMeAPI is maintained and funded by [Mairie de Paris](http://www.paris.fr)
 
-The names and logos for thoughtbot are trademarks of Gnuside, inc.
 
 
 License
